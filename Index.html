@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Data</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        input[type="text"] {
+            width: 300px;
+            padding: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Customer Data</h1>
+    <input type="text" id="search" placeholder="Search...">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Postal Code</th>
+                <th>Country</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById('search').addEventListener('input', function() {
+            const searchValue = this.value;
+            fetch(`fetch_data.php?search=${searchValue}`)
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('table-body');
+                    tableBody.innerHTML = '';
+                    data.forEach(row => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${row.name}</td>
+                            <td>${row.address}</td>
+                            <td>${row.city}</td>
+                            <td>${row.postal}</td>
+                            <td>${row.country}</td>
+                        `;
+                        tableBody.appendChild(tr);
+                    });
+                });
+        });
+
+        // Fetch all data on initial load
+        window.onload = function() {
+            document.getElementById('search').dispatchEvent(new Event('input'));
+        };
+    </script>
+
+</body>
+</html>
